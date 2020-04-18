@@ -1,60 +1,49 @@
-ENV_ROOT="~/Development/"
+ENV_ROOT="d:\xampp\htdocs"
+ADMIN_USER="$1"
+ADMIN_PASS="$2"
+folderName="$3"
+databasename="$4"
+sitetitle="$5"
 
-green=`tput setaf 2`
-reset=`tput sgr0`
-
-function restart {
-    echo 'Exit programm'
-    exit 1
-}
+green=$(tput setaf 2)
+reset=$(tput sgr0)
 
 clear
 
-read -p "Create an Admin Username: " ADMIN_USER
-if [ -z $ADMIN_USER ]; then
-    echo 'Please enter a username!'
-    restart
-fi
+while [ -z "$ADMIN_USER" ]
+do
+  read -r -p "Create an Admin Username: " ADMIN_USER
+done
 
-read -p "Create an Admin Password: " ADMIN_PASS
-if [ -z $ADMIN_PASS ]; then
-    echo 'Please enter a password!'
-    restart
-fi
+while [ -z "$ADMIN_PASS" ]; do
+  read -r -p "Create an Admin Password: " ADMIN_PASS
+done
 
-read -p "Name the WP folder to be created: " folderName
-if [ -z $folderName ]; then
-    echo 'Please enter a folder name!'
-    restart
-fi
+while [ -z "$folderName" ]; do
+  read -r -p "Name the WP folder to be created: " folderName
+done
 
-read -p "Database name: " databasename
-if [ -z $databasename ]; then
-    echo 'Please enter a database name!'
-    restart
-fi
+while [ -z "$databasename" ]; do
+  read -r -p "Database name: " databasename
+done
 
-read -p "Site title: " "sitetitle"
-if [ -z "$sitetitle" ]; then
-    echo 'Please enter a site title!'
-    restart
-fi
-
+while [ -z "$sitetitle" ]; do
+  read -r -p "Site title: " sitetitle
+done
 
 SITE_URL="https://localhost/$folderName"
 
-
 echo "======================================================="
-mkdir $ENV_ROOT/$folderName
-cd $ENV_ROOT/$folderName
+mkdir $ENV_ROOT/"$folderName"
+cd $ENV_ROOT/"$folderName" || exit
 echo "${green}Success:${reset} Created folder at: $ENV_ROOT/$folderName"
 echo "======================================================="
 
-wp core download --locale=en_GB
+wp core download
 
 echo "======================================================="
 
-wp config create --dbname=$databasename --dbprefix=xwp_
+wp config create --dbname="$databasename" --dbprefix=xwp_
 
 echo "======================================================="
 
@@ -62,7 +51,7 @@ wp db create
 
 echo "======================================================="
 
-wp core install --url=$SITE_URL --title="$sitetitle" --admin_user=$ADMIN_USER --admin_password=$ADMIN_PASS
+wp core install --url="$SITE_URL" --title="$sitetitle" --admin_user="$ADMIN_USER" --admin_password="$ADMIN_PASS"
 
 echo "======================================================="
 
@@ -86,8 +75,8 @@ wp option update show_on_front page
 
 echo "======================================================="
 
-wp scaffold _s "$folderName-theme" --theme_name="$sitetitle Theme" --author="Jacob Herper" --author_uri="https://twitter.com/jakeherp" --activate --sassify
-wp theme delete twentyfifteen twentysixteen twentyseventeen
+wp scaffold _s "$folderName-theme" --theme_name="$sitetitle Theme" --author="Bud Manz" --author_uri="https://twitter.com/manzwebdesigns" --activate --sassify
+wp theme delete twentyfifteen twentysixteen twentyseventeen twentyeighteen twentynineteen
 
 echo "======================================================="
 
@@ -109,12 +98,12 @@ echo "======================================================="
 # Open the WordPress Installation root folder in VS Code. Happy Coding :)
 code ./
 
-cd $ENV_ROOT/$folderName/wp-content/themes/$folderName-theme
+cd $ENV_ROOT/"$folderName"/wp-content/themes/"$folderName"-theme || exit
 git init
 git add .
 git commit -m "Initial commit"
 
-open -a "Google Chrome" $SITE_URL
+open -a "Google Chrome" "$SITE_URL"
 
 echo "======================================================="
 echo "${green}Success!${reset} Installation Script finished!"
