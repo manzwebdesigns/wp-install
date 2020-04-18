@@ -23,4 +23,4 @@ Then use `composer global require wp-cli/wp-cli-bundle` to install WP-CLI.
 14. Opens the theme folder in VS Code and the project in Google Chrome
 
 
-[https://getcomposer.org/Composer-Setup.exe]: composer
+[composer]: https://getcomposer.org/Composer-Setup.exe
