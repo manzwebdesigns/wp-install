@@ -2,7 +2,7 @@
 
 This version is for Windows.  To prepare for using the script, you must modify the `ENV_ROOT` variable 
 at the top of the script to match the http_root of your webserver.  You must also install WP-CLI, which
-is most easily done by installing [composer][https://getcomposer.org/Composer-Setup.exe].
+is most easily done by installing composer using this link: https://getcomposer.org/Composer-Setup.exe.
 Then use `composer global require wp-cli/wp-cli-bundle` to install WP-CLI.
 
 ## What this script does:
@@ -21,6 +21,3 @@ Then use `composer global require wp-cli/wp-cli-bundle` to install WP-CLI.
 12. Creates a Main Menu and adds the existing pages to it
 13. Initialises a git repository for the Theme folder
 14. Opens the theme folder in VS Code and the project in Google Chrome
-
-
-[composer]: https://getcomposer.org/Composer-Setup.exe
