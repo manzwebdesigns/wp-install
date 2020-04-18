@@ -3,7 +3,8 @@
 This version is for Windows.  To prepare for using the script, you must modify the `ENV_ROOT` variable 
 at the top of the script to match the http_root of your webserver.  You must also install WP-CLI, which
 is most easily done by installing composer using this link: https://getcomposer.org/Composer-Setup.exe.
-Then use `composer global require wp-cli/wp-cli-bundle` to install WP-CLI.
+Then use `composer global require wp-cli/wp-cli-bundle` to install WP-CLI. If you have an error about 
+`mysql`, you will need to add the `xampp/mysql/bin` directory to your PATH variable.
 
 ## What this script does:
 

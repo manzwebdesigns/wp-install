@@ -34,16 +34,16 @@ done
 SITE_URL="https://localhost/$folderName"
 
 echo "======================================================="
-mkdir $ENV_ROOT/"$folderName"
-cd $ENV_ROOT/"$folderName" || exit
-echo "${green}Success:${reset} Created folder at: $ENV_ROOT/$folderName"
+mkdir $ENV_ROOT\\"$folderName"
+cd $ENV_ROOT\\"$folderName" || exit
+echo "${green}Success:${reset} Created folder at: $ENV_ROOT\\$folderName"
 echo "======================================================="
 
 wp core download
 
 echo "======================================================="
 
-wp config create --dbname="$databasename" --dbprefix=xwp_
+wp config create --dbname="$databasename" --dbprefix=xwp_ --dbuser="root"
 
 echo "======================================================="
 
@@ -51,7 +51,7 @@ wp db create
 
 echo "======================================================="
 
-wp core install --url="$SITE_URL" --title="$sitetitle" --admin_user="$ADMIN_USER" --admin_password="$ADMIN_PASS"
+wp core install --url="$SITE_URL" --title="$sitetitle" --admin_user="$ADMIN_USER" --admin_password="$ADMIN_PASS" --admin_email="admin@manzwebdesigns.com"
 
 echo "======================================================="
 
@@ -98,7 +98,7 @@ echo "======================================================="
 # Open the WordPress Installation root folder in VS Code. Happy Coding :)
 code ./
 
-cd $ENV_ROOT/"$folderName"/wp-content/themes/"$folderName"-theme || exit
+cd $ENV_ROOT\\"$folderName"\\wp-content\\themes\\"$folderName"-theme || exit
 git init
 git add .
 git commit -m "Initial commit"
