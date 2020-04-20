@@ -1,14 +1,11 @@
-ENV_ROOT="d:\xampp\htdocs"
+DIR_SEP="/"
+ENV_ROOT="/var/www"
+KEEP_DIR="twentytwenty"
 ADMIN_USER="$1"
 ADMIN_PASS="$2"
 folderName="$3"
 databasename="$4"
 sitetitle="$5"
-
-green=$(tput setaf 2)
-reset=$(tput sgr0)
-
-clear
 
 while [ -z "$ADMIN_USER" ]
 do
@@ -31,12 +28,26 @@ while [ -z "$sitetitle" ]; do
   read -r -p "Site title: " sitetitle
 done
 
+if [[ "$OSTYPE" == "cygwin" ]]; then
+  DIR_SEP="\\"
+  ENV_ROOT="d:\xampp\htdocs"
+elif [[ "$OSTYPE" == "msys" ]]; then
+  DIR_SEP="\\"
+  ENV_ROOT="d:\xampp\htdocs"
+elif [[ "$OSTYPE" == "win32" ]]; then
+  DIR_SEP="\\"
+  ENV_ROOT="d:\xampp\htdocs"
+fi
+
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 SITE_URL="https://localhost/$folderName"
 
 echo "======================================================="
-mkdir $ENV_ROOT\\"$folderName"
-cd $ENV_ROOT\\"$folderName" || exit
-echo "${green}Success:${reset} Created folder at: $ENV_ROOT\\$folderName"
+mkdir "$ENV_ROOT$DIR_SEP$folderName"
+cd "$ENV_ROOT$DIR_SEP$folderName" || exit
+echo "${green}Success:${reset} Created folder at: $ENV_ROOT$DIR_SEP$folderName"
 echo "======================================================="
 
 wp core download
@@ -60,7 +71,7 @@ wp rewrite flush --hard
 
 echo "======================================================="
 
-wp post delete 1 2 --force
+wp post delete 1 2 3 --force
 
 echo "======================================================="
 
@@ -70,40 +81,42 @@ wp post create --post_type=page --post_title='Contact' --post_status=publish
 
 echo "======================================================="
 
-wp option update page_on_front 3
+wp option update page_on_front 4
 wp option update show_on_front page
 
 echo "======================================================="
 
-wp scaffold _s "$folderName-theme" --theme_name="$sitetitle Theme" --author="Bud Manz" --author_uri="https://twitter.com/manzwebdesigns" --activate --sassify
-wp theme delete twentyfifteen twentysixteen twentyseventeen twentyeighteen twentynineteen
+wp scaffold _s "$folderName" --theme_name="$sitetitle Theme" --author="Bud Manz" --author_uri="https://twitter.com/manzwebdesigns" --activate --sassify
+cd "$ENV_ROOT""$DIR_SEP""$folderName""$DIR_SEP""wp-content""$DIR_SEP"themes || exit
+for d in twenty* ; do
+  if [ "$d" != "$KEEP_DIR" ]; then
+    wp theme delete "$d"
+  fi
+done
+cd - || exit
 
 echo "======================================================="
 
 wp plugin delete hello akismet
 
-wp plugin install wordpress-seo --activate
+wp plugin install classic-editor --activate
+wp plugin install all-in-one-wp-migration --activate
 wp plugin install ninja-forms --activate
 
 echo "======================================================="
 
 wp menu create "Main Menu"
 wp menu location assign main-menu menu-1
-wp menu item add-post main-menu 3 --title="Home"
-wp menu item add-post main-menu 4 --title="About"
-wp menu item add-post main-menu 5 --title="Contact"
+wp menu item add-post main-menu 4 --title="Home"
+wp menu item add-post main-menu 5 --title="About"
+wp menu item add-post main-menu 6 --title="Contact"
 
 echo "======================================================="
 
-# Open the WordPress Installation root folder in VS Code. Happy Coding :)
-code ./
-
-cd $ENV_ROOT\\"$folderName"\\wp-content\\themes\\"$folderName"-theme || exit
+cd "$ENV_ROOT""$DIR_SEP""$folderName""$DIR_SEP""wp-content""$DIR_SEP""themes""$DIR_SEP""$folderName" || exit
 git init
 git add .
 git commit -m "Initial commit"
-
-open -a "Google Chrome" "$SITE_URL"
 
 echo "======================================================="
 echo "${green}Success!${reset} Installation Script finished!"
